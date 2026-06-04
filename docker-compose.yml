@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile.kali
     container_name: huntforge-kali
+    env_file:
+      - .env
     volumes:
       - ./:/huntforge
       - ~/.huntforge:/root/.huntforge
