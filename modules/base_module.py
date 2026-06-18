@@ -345,4 +345,16 @@ class BaseModule:
         """
         if not path:
             return ""
-        return os.path.normpath(path).replace('\\', '/')
+            
+        # Get the absolute path of the project root
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        abs_path = os.path.abspath(path)
+        
+        # If the path is within the project root, map it to /huntforge
+        if abs_path.startswith(project_root):
+            rel_path = os.path.relpath(abs_path, project_root)
+            container_path = f"/huntforge/{rel_path}"
+        else:
+            container_path = abs_path
+            
+        return os.path.normpath(container_path).replace('\\', '/')

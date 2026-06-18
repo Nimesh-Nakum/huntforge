@@ -741,6 +741,17 @@ class MyToolModule(BaseModule):
 
 ---
 
+## Team & Credits
+
+HuntForge v1.0 was built by a dedicated team of offensive and defensive security professionals:
+
+- **[Your Name]** — Project Lead & Red-Teamer
+- **[Member 2 Name]** — Red-Teamer
+- **[Member 3 Name]** — Blue-Teamer
+- **[Member 4 Name]** — Blue-Teamer
+
+---
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
