@@ -1,19 +1,19 @@
 # core/exceptions.py
 # Author      : Member 1
-# Responsibility : Define ALL exceptions used across HuntForge.
+# Responsibility : Define ALL exceptions used across SWATH.
 #                 Every file imports exceptions from here.
 #                 Nobody creates exception classes anywhere else.
 # ------------------------------------------------------------
 
 # ── Base ─────────────────────────────────────────────────────────
 
-class HuntForgeError(Exception):
+class SWATHError(Exception):
     """
-    Root exception for everything HuntForge raises.
+    Root exception for everything SWATH raises.
     Orchestrator uses this as the catch-all safety net.
 
     Hierarchy:
-        HuntForgeError
+        SWATHError
             ├── DockerNotRunningError
             ├── BinaryNotFoundError
             ├── ToolTimeoutError
@@ -39,13 +39,13 @@ class HuntForgeError(Exception):
 # Caught by : Orchestrator._run_tool()
 # These errors mean the tool could not run at all.
 
-class DockerNotRunningError(HuntForgeError):
+class DockerNotRunningError(SWATHError):
     """
-    The HuntForge Docker container is down or inaccessible.
+    The SWATH Docker container is down or inaccessible.
 
     Example:
         raise DockerNotRunningError(
-            "Docker container 'huntforge-kali' is not running."
+            "Docker container 'swath-kali' is not running."
         )
 
     Orchestrator action: abort scan immediately. Tools cannot run.
@@ -53,7 +53,7 @@ class DockerNotRunningError(HuntForgeError):
     pass
 
 
-class BinaryNotFoundError(HuntForgeError):
+class BinaryNotFoundError(SWATHError):
     """
     Tool binary is not installed or not in PATH.
 
@@ -68,7 +68,7 @@ class BinaryNotFoundError(HuntForgeError):
     pass
 
 
-class ToolTimeoutError(HuntForgeError):
+class ToolTimeoutError(SWATHError):
     """
     Tool exceeded its allowed execution time.
 
@@ -83,7 +83,7 @@ class ToolTimeoutError(HuntForgeError):
     pass
 
 
-class ToolExecutionError(HuntForgeError):
+class ToolExecutionError(SWATHError):
     """
     Tool ran but returned a non-zero exit code.
     Means the tool itself reported a failure.
@@ -105,7 +105,7 @@ class ToolExecutionError(HuntForgeError):
 #             Orchestrator (OutputParseError)
 # These errors mean the tool ran but output is missing or unreadable.
 
-class EmptyOutputError(HuntForgeError):
+class EmptyOutputError(SWATHError):
     """
     Tool ran successfully but produced no output file,
     or the output file exists but is completely empty.
@@ -126,7 +126,7 @@ class EmptyOutputError(HuntForgeError):
     pass
 
 
-class OutputParseError(HuntForgeError):
+class OutputParseError(SWATHError):
     """
     Tool produced output but it could not be parsed.
     Usually means unexpected format — e.g. expected JSON, got HTML.
@@ -144,10 +144,10 @@ class OutputParseError(HuntForgeError):
 
 # ── Scope level ───────────────────────────────────────────────────
 # Raised by : ScopeEnforcer.check()
-# Caught by : huntforge.py (before scan even starts)
+# Caught by : swath.py (before scan even starts)
 # This is the most critical exception — stops everything.
 
-class OutOfScopeError(HuntForgeError):
+class OutOfScopeError(SWATHError):
     """
     Target domain is outside the defined bug bounty scope.
 
@@ -166,7 +166,7 @@ class OutOfScopeError(HuntForgeError):
 # Raised by : BudgetTracker
 # Caught by : Orchestrator gate check
 
-class BudgetExceededError(HuntForgeError):
+class BudgetExceededError(SWATHError):
     """
     Scan has consumed its entire request or time budget.
 

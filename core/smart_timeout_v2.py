@@ -1,5 +1,5 @@
 # core/smart_timeout_v2.py
-# Author         : HuntForge Core Team
+# Author         : SWATH Core Team
 # Responsibility : Production-grade activity-aware process monitoring.
 #                  Uses hybrid detection (Output growth + CPU/IO activity)
 #                  and graceful SIGTERM→SIGKILL termination.

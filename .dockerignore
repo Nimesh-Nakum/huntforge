@@ -1,8 +1,8 @@
 # Python virtual environments
 lib/
 lib64/
-huntforge/lib/
-huntforge/lib64/
+swath/lib/
+swath/lib64/
 venv/
 ENV/
 env/
@@ -35,15 +35,15 @@ __pycache__/
 htmlcov/
 *.egg-info/
 
-# HuntForge specific exclusions (already in .gitignore but explicit for Docker)
+# SWATH specific exclusions (already in .gitignore but explicit for Docker)
 output/
 logs/
 wordlists/
 SecLists/
 .nuclei/
 .ollama/
-.huntforge/
-.config/huntforge/
+.swath/
+.config/swath/
 .credstore/
 
 # OS generated files

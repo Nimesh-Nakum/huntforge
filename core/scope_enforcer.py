@@ -10,7 +10,7 @@ from loguru import logger
 from core.exceptions import OutOfScopeError
 
 class ScopeEnforcer:
-    def __init__(self, config_dir: str = "~/.huntforge"):
+    def __init__(self, config_dir: str = "~/.swath"):
         self.config_dir = os.path.expanduser(config_dir)
         self.scope_file = os.path.join(self.config_dir, 'scope.json')
         self._load_scopes()
@@ -53,7 +53,7 @@ class ScopeEnforcer:
                 "in_scope": ["*.example.com", "example.com"],
                 "out_of_scope": ["admin.example.com"]
             }}
-            logger.info("Created new default scope file. Please edit ~/.huntforge/scope.json with your targets.")
+            logger.info("Created new default scope file. Please edit ~/.swath/scope.json with your targets.")
 
     def _match(self, domain: str, pattern: str) -> bool:
         """Evaluates wildcard patterns like *.example.com against the domain."""

@@ -5,13 +5,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.kali
-    container_name: huntforge-kali
+    container_name: swath-kali
     env_file:
       - .env
     volumes:
-      - ./:/huntforge
-      - ~/.huntforge:/root/.huntforge
-    working_dir: /huntforge
+      - ./:/swath
+      - ~/.swath:/root/.swath
+    working_dir: /swath
     command: tail -f /dev/null
     restart: unless-stopped
     ports:
@@ -23,10 +23,10 @@ services:
         reservations:
           memory: 128M
     networks:
-      - huntforge
+      - swath
 
 
 
 networks:
-  huntforge:
+  swath:
     driver: bridge

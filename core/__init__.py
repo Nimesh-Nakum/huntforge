@@ -1,5 +1,5 @@
 """
-HuntForge Core Package
+SWATH Core Package
 
 Contains the central orchestration, scheduling, and management modules.
 """

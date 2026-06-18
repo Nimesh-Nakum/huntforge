@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Resource-Aware Adaptive Scheduler for HuntForge
+Resource-Aware Adaptive Scheduler for SWATH
 
 Intelligently schedules tools based on:
 - Phase type (light vs heavy)

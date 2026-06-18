@@ -1,5 +1,5 @@
 """
-HuntForge Dashboard — Production-Grade Real-Time Web Interface
+SWATH Dashboard — Production-Grade Real-Time Web Interface
 
 Features:
 - Server-Sent Events (SSE) for live scan streaming
@@ -21,7 +21,7 @@ app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DB_PATH = os.path.expanduser("~/.huntforge/history.db")
+DB_PATH = os.path.expanduser("~/.swath/history.db")
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -36,9 +36,9 @@ def resolve_output_dir(path):
     if os.path.isabs(path) and os.path.exists(path):
         return path
 
-    # Docker container path mapping: /huntforge/output/domain → output/domain
-    # The container runs from /huntforge/, so strip that prefix
-    docker_prefixes = ['/huntforge/', '/huntforge']
+    # Docker container path mapping: /swath/output/domain → output/domain
+    # The container runs from /swath/, so strip that prefix
+    docker_prefixes = ['/swath/', '/swath']
     stripped = path
     for prefix in docker_prefixes:
         if path.startswith(prefix):
@@ -542,7 +542,7 @@ def api_generate_report(scan_id):
 
     # Launch report generation in background
     subprocess.Popen(
-        [sys.executable, 'huntforge.py', 'report', scan['domain']],
+        [sys.executable, 'swath.py', 'report', scan['domain']],
         cwd=PROJECT_ROOT,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
@@ -573,7 +573,7 @@ def launch_precision_strike(scan_id):
         f.write('\n'.join(urls))
 
     subprocess.Popen(
-        [sys.executable, 'huntforge.py', 'precision', scan['domain'], '--file', precision_path],
+        [sys.executable, 'swath.py', 'precision', scan['domain'], '--file', precision_path],
         cwd=PROJECT_ROOT,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL

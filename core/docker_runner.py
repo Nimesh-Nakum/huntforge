@@ -11,10 +11,10 @@ from core.exceptions import DockerNotRunningError, ToolExecutionError, ToolTimeo
 
 class DockerRunner:
     """
-    Executes commands inside the HuntForge Docker container.
+    Executes commands inside the SWATH Docker container.
     """
 
-    def __init__(self, container_name: str = "huntforge-kali"):
+    def __init__(self, container_name: str = "swath-kali"):
         self.container_name = container_name
 
     def is_container_running(self) -> bool:

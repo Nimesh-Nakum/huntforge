@@ -27,8 +27,8 @@ _EXTRA_BIN_PATHS = [
     '/go/bin',
     '/usr/local/go/bin',
     os.path.expanduser('~/go/bin'),
-    '/home/huntforge/go/bin',
-    '/home/huntforge/.local/bin',
+    '/home/swath/go/bin',
+    '/home/swath/.local/bin',
     os.path.expanduser('~/.local/bin'),
 ]
 
@@ -41,7 +41,7 @@ for _p in _EXTRA_BIN_PATHS:
 
 class BaseModule:
     """
-    Parent class for every tool module in HuntForge.
+    Parent class for every tool module in SWATH.
 
     Member 2 creates child classes like this:
 
@@ -350,11 +350,11 @@ class BaseModule:
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         abs_path = os.path.abspath(path)
         
-        # If the path is within the project root, map it to /huntforge
+        # If the path is within the project root, map it to /swath
         if abs_path.startswith(project_root):
             rel_path = os.path.relpath(abs_path, project_root)
-            container_path = f"/huntforge/{rel_path}"
+            container_path = f"/swath/{rel_path}"
         else:
             container_path = abs_path
             
-        return os.path.normpath(container_path).replace('\\', '/')
+        return os.path.normpath(container_path).replace('\\', '/')

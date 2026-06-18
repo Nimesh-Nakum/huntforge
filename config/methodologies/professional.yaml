@@ -1,4 +1,4 @@
-# HuntForge Professional Methodology
+# SWATH Professional Methodology
 # "The Real-World Recon Framework"
 #
 # This methodology is designed for ACTUAL bug bounty hunters who need
@@ -21,7 +21,7 @@ meta:
   version: "1.0"
   name: "Professional Recon"
   description: "Trimmed to 16 essential tools. What real bug bounty hunters actually use."
-  author: "HuntForge Professional Team"
+  author: "SWATH Professional Team"
   iterative: false
   ai_guided: true
 
@@ -420,7 +420,7 @@ phases:
         default_flags: "-u https://{domain}/FUZZ -w {wordlist} -o {output_file} -of json -mc 200,201,301,302,307,308,401,403,405 -t 50 -ac -s"
         extra_args: ""
         config:
-          wordlist: "~/.huntforge/wordlists/directories/raft-medium-words.txt"
+          wordlist: "~/.swath/wordlists/directories/raft-medium-words.txt"
           threads: 50
           rate_limit: null
           match_codes: "200,201,204,301,302,307,308,401,403,405"
@@ -518,7 +518,7 @@ phases:
         weight: light
         timeout: 300
         output_file: "raw/subjack.txt"
-        default_flags: "-w {subdomains_file} -o {output_file} -ssl -timeout 30 -c ~/.huntforge/fingerprints.json"
+        default_flags: "-w {subdomains_file} -o {output_file} -ssl -timeout 30 -c ~/.swath/fingerprints.json"
         extra_args: ""
         config:
           threads: 100
@@ -565,7 +565,7 @@ phases:
 # ============================================================================
 
 wordlists:
-  base_dir: "~/.huntforge/wordlists"
+  base_dir: "~/.swath/wordlists"
 
   subdomains:
     default: "all.txt"  # JHaddix - comprehensive

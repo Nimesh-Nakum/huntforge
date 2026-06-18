@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HuntForge — Reconnaissance Command Center</title>
-    <meta name="description" content="HuntForge AI-Powered Bug Bounty Reconnaissance Framework Dashboard">
+    <title>SWATH — Reconnaissance Command Center</title>
+    <meta name="description" content="SWATH AI-Powered Bug Bounty Reconnaissance Framework Dashboard">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,7 +19,7 @@
                 <div class="logo-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                 </div>
-                <h1>HuntForge <span class="badge">PRO</span></h1>
+                <h1>SWATH <span class="badge">PRO</span></h1>
             </div>
 
             <div style="display:flex;align-items:center;gap:1rem">
@@ -73,7 +73,7 @@
                         <span class="activity-time text-xs">{{ scan.start_time[:10] if scan.start_time else '' }}</span>
                     </div>
                     {% else %}
-                    <div class="empty-state">No scans recorded yet. Run <code>huntforge scan &lt;domain&gt;</code></div>
+                    <div class="empty-state">No scans recorded yet. Run <code>swath scan &lt;domain&gt;</code></div>
                     {% endfor %}
                 </div>
             </div>

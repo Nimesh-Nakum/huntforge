@@ -1,5 +1,5 @@
 # ai/methodology_engine.py
-# Author         : HuntForge Agent
+# Author         : SWATH Agent
 # Responsibility : Generates methodology using OpenRouter API.
 #                  Reads default methodology first, then asks AI to
 #                  create a focused version based on the user's prompt.
@@ -19,7 +19,7 @@ DEFAULT_METHOD_PATH = os.path.join('config', 'default_methodology.yaml')
 # ── Tool Reference (used when default methodology can't be loaded) ──
 
 TOOL_REFERENCE = """
-HuntForge has these tools available, organized by phase:
+SWATH has these tools available, organized by phase:
 
 Phase 1 — Passive Recon: subfinder, crtsh
 Phase 2 — Secrets & OSINT: gitleaks, trufflehog
@@ -55,7 +55,7 @@ Tool details:
 # ── System Prompt ──────────────────────────────────────────────
 
 SYSTEM_PROMPT = """\
-You are HuntForge AI, an expert bug bounty methodology generator.
+You are SWATH AI, an expert bug bounty methodology generator.
 
 YOUR TASK:
 Given the user's specific reconnaissance goal and the DEFAULT METHODOLOGY below, 
@@ -87,7 +87,7 @@ CRITICAL RULES:
 12. ALWAYS include Phase 1 (passive recon) — subdomain discovery is foundational.
 13. Include the "meta" block with version, name, description, and author fields.
 14. Include "global_defaults" with timeout, retries, rate_limit, output_format, enabled.
-15. Use ONLY these HuntForge tool names: subfinder, crtsh, gitleaks, trufflehog, httpx, naabu, whatweb, wappalyzer_cli, katana, gau, paramspider, arjun, graphql_voyager, ffuf, wpscan, nuclei, nuclei_auth, subjack, dalfox, sqlmap.
+15. Use ONLY these SWATH tool names: subfinder, crtsh, gitleaks, trufflehog, httpx, naabu, whatweb, wappalyzer_cli, katana, gau, paramspider, arjun, graphql_voyager, ffuf, wpscan, nuclei, nuclei_auth, subjack, dalfox, sqlmap.
 16. DO NOT invent tool names that are not in the list above.
 17. DO NOT include comments in the YAML output.
 """
@@ -99,7 +99,7 @@ class MethodologyEngine:
 
     def generate(self, prompt: str) -> dict:
         """
-        Calls OpenRouter to generate a focused HuntForge methodology YAML.
+        Calls OpenRouter to generate a focused SWATH methodology YAML.
         
         Strategy:
         1. Load the default methodology as a reference

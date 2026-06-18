@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Optional
 
 class ScanHistory:
-    def __init__(self, db_path: str = "~/.huntforge/history.db"):
+    def __init__(self, db_path: str = "~/.swath/history.db"):
         self.db_path = os.path.expanduser(db_path)
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         self._init_db()

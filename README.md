@@ -27,9 +27,9 @@ Zero noise. Maximum signal.
 
 </div>
 
-## What is HuntForge?
+## What is SWATH?
 
-HuntForge is a strict, containerized reconnaissance orchestrator designed for operators who value **signal over noise**. Built on the principle that most recon frameworks are bloated museum exhibits of deprecated tools, HuntForge runs exactly 19 curated tools through a 7-phase pipeline governed by intelligence tags — not blind sequential execution.
+SWATH is a strict, containerized reconnaissance orchestrator designed for operators who value **signal over noise**. Built on the principle that most recon frameworks are bloated museum exhibits of deprecated tools, SWATH runs exactly 19 curated tools through a 7-phase pipeline governed by intelligence tags — not blind sequential execution.
 
 Phase 3 detects a Cloudflare WAF at high confidence? Every downstream tool auto-injects rate limiting and browser User-Agents. Phase 4 fingerprints WordPress? Phase 6 conditionally unlocks `wpscan`. Phase 1 finds zero subdomains? The pipeline aborts — there's nothing to hunt.
 
@@ -53,8 +53,8 @@ Phase 3 detects a Cloudflare WAF at high confidence? Every downstream tool auto-
 - **Human Decision Point** — Phase 7 (vulnerability scanning) requires explicit `y/N` confirmation. You review the recon summary before any noisy vuln scans fire.
 - **SmartTimeoutV2** — Hybrid activity monitoring via output file growth + CPU/IO deltas via `psutil`. Tool-specific profiles (nuclei: 600s extension, dalfox: 120s, katana: 450s low-IO threshold).
 - **Resource-Aware Scheduling** — `AdaptiveScheduler` scales tool parameters to fit available RAM. `ResourceMonitor` checks CPU pressure, swap usage, and user activity before scheduling heavy tools.
-- **State Checkpointing** — Saves `completed_tools`, `tags`, and `phase` after every tool. `huntforge resume target.com` picks up exactly where it stopped.
-- **Scope Enforcement** — Wildcard-based scope matching in `~/.huntforge/scope.json`. Blocks out-of-scope targets with manual override confirmation.
+- **State Checkpointing** — Saves `completed_tools`, `tags`, and `phase` after every tool. `swath resume target.com` picks up exactly where it stopped.
+- **Scope Enforcement** — Wildcard-based scope matching in `~/.swath/scope.json`. Blocks out-of-scope targets with manual override confirmation.
 - **Budget Tracking** — Tracks HTTP request count and elapsed time per scan. Gates tool execution when budget is exceeded. Saves to `processed/budget_status.json`.
 - **SIEM Integration** — Structured JSONL event logging. `SIEMFormatter` outputs to Splunk (JSON), ArcSight (CEF), and QRadar (LEEF).
 - **Docker Isolation** — All tools execute inside a hardened Kali container. 4GB memory limit, non-root user, volume-mounted output.
@@ -72,7 +72,7 @@ flowchart LR
     classDef core fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#fff
     classDef target fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#fff
 
-    CLI["💻 huntforge.py<br/>CLI Entry Point"]:::cli --> ORCH["⚙️ OrchestratorV2<br/>7-Phase Engine"]:::core
+    CLI["💻 swath.py<br/>CLI Entry Point"]:::cli --> ORCH["⚙️ OrchestratorV2<br/>7-Phase Engine"]:::core
     CLI --> AI["🧠 Methodology Engine"]:::ai
     CLI --> RPT["📝 Report Generator"]:::ai
     AI -.-> API["☁️ OpenRouter API<br/>gemini-2.5-flash"]:::ai
@@ -236,7 +236,7 @@ User-Agent pool rotates across 4 real browser signatures (Chrome/Windows, Safari
 ### Docker Deployment (Recommended)
 
 ```bash
-git clone https://github.com/HuntForgeHQ/huntforge.git && cd huntforge
+git clone https://github.com/SWATHHQ/swath.git && cd swath
 
 cp .env.example .env
 # Edit .env — set OPENROUTER_API_KEY (required for AI features)
@@ -244,10 +244,10 @@ cp .env.example .env
 docker-compose up -d --build
 
 # Verify container is running
-docker ps | grep huntforge-kali
+docker ps | grep swath-kali
 
 # Run your first scan
-python3 huntforge.py scan example.com
+python3 swath.py scan example.com
 ```
 
 The Docker container (`kalilinux/kali-rolling` base) includes all 19 tools (16 Go/system binaries + 3 API/Python modules), Node.js/Wappalyzer, and Kali-packaged security tools. Memory is capped at 4GB with auto-restart enabled.
@@ -255,7 +255,7 @@ The Docker container (`kalilinux/kali-rolling` base) includes all 19 tools (16 G
 ### Bare-Metal Installation
 
 ```bash
-git clone https://github.com/HuntForgeHQ/huntforge.git && cd huntforge
+git clone https://github.com/SWATHHQ/swath.git && cd swath
 
 cp .env.example .env
 
@@ -280,7 +280,7 @@ sudo apt install ffuf wpscan sqlmap whatweb gitleaks trufflehog
 # Install Wappalyzer CLI
 npm install -g wappalyzer
 
-python3 huntforge.py scan example.com
+python3 swath.py scan example.com
 ```
 
 ### Environment Variables
@@ -298,7 +298,7 @@ python3 huntforge.py scan example.com
 ## CLI Reference
 
 ```
-usage: huntforge <command> [options]
+usage: swath <command> [options]
 
 Commands:
   scan <domain>              Run a 7-phase reconnaissance scan
@@ -316,29 +316,29 @@ Scan Options:
 
 ```bash
 # Full professional scan with default methodology
-python3 huntforge.py scan target.com
+python3 swath.py scan target.com
 
 # Scan with a custom methodology
-python3 huntforge.py scan target.com --methodology config/methodologies/professional.yaml
+python3 swath.py scan target.com --methodology config/methodologies/professional.yaml
 
 # AI generates a methodology focused on API vulnerabilities
-python3 huntforge.py ai "find XSS and SQLi in REST API endpoints of target.com"
-python3 huntforge.py scan target.com --methodology config/generated_methodology.yaml
+python3 swath.py ai "find XSS and SQLi in REST API endpoints of target.com"
+python3 swath.py scan target.com --methodology config/generated_methodology.yaml
 
 # Resume a scan that was interrupted
-python3 huntforge.py resume target.com
+python3 swath.py resume target.com
 
 # Generate post-scan executive report
-python3 huntforge.py report target.com
+python3 swath.py report target.com
 # Output: output/target.com/logs/ai_report.md
 
 # Launch dashboard on custom port
-python3 huntforge.py dashboard --port 8080
+python3 swath.py dashboard --port 8080
 ```
 
 ### Scope Configuration
 
-Define your bug bounty program scopes in `~/.huntforge/scope.json`:
+Define your bug bounty program scopes in `~/.swath/scope.json`:
 
 ```json
 {
@@ -400,7 +400,7 @@ flowchart TD
 
 ## Scope Enforcement
 
-`ScopeEnforcer` loads wildcard rules from `~/.huntforge/scope.json` and validates every target before the scan begins:
+`ScopeEnforcer` loads wildcard rules from `~/.swath/scope.json` and validates every target before the scan begins:
 
 1. **Strict exclusion first** — out-of-scope patterns are checked before in-scope
 2. **Wildcard matching** — `*.example.com` matches `api.example.com` and `example.com`
@@ -426,13 +426,13 @@ After every tool completes, the orchestrator saves to `output/<domain>/checkpoin
 }
 ```
 
-`huntforge.py resume target.com` loads the checkpoint, restores all tags into `TagManager`, and skips already-completed tools.
+`swath.py resume target.com` loads the checkpoint, restores all tags into `TagManager`, and skips already-completed tools.
 
 ---
 
 ## Dashboard
 
-Launch the web UI with `huntforge.py dashboard` and navigate to `http://localhost:5000`.
+Launch the web UI with `swath.py dashboard` and navigate to `http://localhost:5000`.
 
 ### Scan History View
 A table of all past scans with columns for domain, status badge, tag count, start time, and duration. Status badges are color-coded: **RUNNING** (blue), **COMPLETED** (green), **FAILED** (red), **INTERRUPTED** (yellow).
@@ -495,7 +495,7 @@ meta:
   version: "1.0"
   name: "Professional Recon"
   description: "19 essential tools. What real bug bounty hunters actually use."
-  author: "HuntForge Professional Team"
+  author: "SWATH Professional Team"
   ai_guided: true
 
 global_defaults:
@@ -570,7 +570,7 @@ budget:
 
 The `MethodologyEngine` loads the default methodology as a reference template, then asks OpenRouter to create a focused version tailored to the user's prompt. The AI is constrained to:
 
-- Use only the 19 valid tool names from the HuntForge registry
+- Use only the 19 valid tool names from the SWATH registry
 - Preserve exact phase key naming conventions (`phase_1_passive_recon`, etc.)
 - Maintain numerical phase ordering
 - Include `if_tag` gates for conditional tools
@@ -604,17 +604,17 @@ All scan events are logged as structured JSONL. The `SIEMFormatter` converts eve
 | Format | Target Platform | Output |
 |:---|:---|:---|
 | `json` (default) | Splunk, Elastic, generic SIEM | Standard JSON event objects |
-| `cef` | Micro Focus ArcSight | `CEF:0|HuntForge|BugBountyFramework|3.0|...` |
-| `leef` | IBM QRadar | `LEEF:1.0|HuntForge|BugBountyFramework|3.0|...` |
+| `cef` | Micro Focus ArcSight | `CEF:0|SWATH|BugBountyFramework|3.0|...` |
+| `leef` | IBM QRadar | `LEEF:1.0|SWATH|BugBountyFramework|3.0|...` |
 
-Tool fingerprints (`data/tool_fingerprints.json`) provide `detection_risk` and `defender_visibility` metadata for each event, enabling SOC teams to correlate HuntForge activity with their detection rules.
+Tool fingerprints (`data/tool_fingerprints.json`) provide `detection_risk` and `defender_visibility` metadata for each event, enabling SOC teams to correlate SWATH activity with their detection rules.
 
 ---
 
 ## Exception Hierarchy
 
 ```
-HuntForgeError (root)
+SWATHError (root)
 ├── DockerNotRunningError      # Container is down → abort scan
 ├── BinaryNotFoundError        # Tool not installed → skip tool, continue
 ├── ToolTimeoutError           # Tool exceeded max timeout → skip tool, continue
@@ -625,7 +625,7 @@ HuntForgeError (root)
 └── BudgetExceededError        # Request/time budget exhausted → skip remaining phases
 ```
 
-Every exception includes the `tool` attribute for precise error attribution. The orchestrator catches `HuntForgeError` as a safety net — individual tool failures never crash the scan.
+Every exception includes the `tool` attribute for precise error attribution. The orchestrator catches `SWATHError` as a safety net — individual tool failures never crash the scan.
 
 ---
 
@@ -634,15 +634,15 @@ Every exception includes the `tool` attribute for precise error attribution. The
 | Component | Specification |
 |:---|:---|
 | Base Image | `kalilinux/kali-rolling:latest` |
-| Container Name | `huntforge-kali` |
+| Container Name | `swath-kali` |
 | Memory Limit | 4 GB |
-| User | `huntforge` (uid=1000, non-root) |
-| Python venv | `/home/huntforge/venv` |
-| Volume: Project | `./ → /huntforge` |
-| Volume: Config | `~/.huntforge → /root/.huntforge` |
+| User | `swath` (uid=1000, non-root) |
+| Python venv | `/home/swath/venv` |
+| Volume: Project | `./ → /swath` |
+| Volume: Config | `~/.swath → /root/.swath` |
 | Port | `5000:5000` (dashboard) |
 | Restart Policy | `unless-stopped` |
-| Network | Isolated bridge (`huntforge`) |
+| Network | Isolated bridge (`swath`) |
 
 ---
 
@@ -658,7 +658,7 @@ flowchart LR
     classDef core fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#fff
     classDef mod fill:#312e81,stroke:#a855f7,stroke-width:2px,color:#fff
 
-    CLI["huntforge.py<br/>CLI + Rich UI"]:::entry --> ORCH["core/orchestrator_v2.py<br/>7-Phase Loop"]:::core
+    CLI["swath.py<br/>CLI + Rich UI"]:::entry --> ORCH["core/orchestrator_v2.py<br/>7-Phase Loop"]:::core
     ORCH --> REG["TOOL_REGISTRY<br/>19 tool → class mappings"]:::core
     REG --> MOD["modules/<phase>/<tool>.py<br/>Each inherits BaseModule"]:::mod
     ORCH --> TM["core/tag_manager.py"]:::core
@@ -723,14 +723,14 @@ class MyToolModule(BaseModule):
 
 1. Fork → branch → PR against `main`
 2. Include a clear description of what changed and why
-3. Verify: `python -m py_compile huntforge.py` and `python -m py_compile core/orchestrator_v2.py`
+3. Verify: `python -m py_compile swath.py` and `python -m py_compile core/orchestrator_v2.py`
 4. Do not commit `.env`, `output/`, `__pycache__/`, or secrets
 
 ---
 
 ## Security & Disclaimer
 
-**HuntForge is designed for authorized penetration testing and bug bounty research only.**
+**SWATH is designed for authorized penetration testing and bug bounty research only.**
 
 - Scope enforcement is built in (`ScopeEnforcer`), but **you are responsible** for ensuring you have authorization before scanning any target
 - The Phase 7 human decision gate exists to prevent accidental vulnerability scanning against unauthorized infrastructure
@@ -743,7 +743,7 @@ class MyToolModule(BaseModule):
 
 ## Team & Credits
 
-HuntForge v1.0 was built by a dedicated team of offensive and defensive security professionals:
+SWATH v1.0 was built by a dedicated team of offensive and defensive security professionals:
 
 - **[Your Name]** — Project Lead & Red-Teamer
 - **[Member 2 Name]** — Red-Teamer
@@ -757,7 +757,7 @@ HuntForge v1.0 was built by a dedicated team of offensive and defensive security
 This project is licensed under the [MIT License](LICENSE).
 
 ```
-Copyright (c) 2026 HuntForgeHQ
+Copyright (c) 2026 SWATHHQ
 ```
 
 ---

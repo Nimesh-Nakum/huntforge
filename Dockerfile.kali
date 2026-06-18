@@ -34,15 +34,15 @@ RUN npm install -g wappalyzer
 
 # Setup Go and local binary environment
 ENV GOPATH=/go
-ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin:/home/huntforge/.local/bin
+ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin:/home/swath/.local/bin
 
 # Create non-root user
-RUN useradd -m -s /bin/bash -u 1000 huntforge \
-    && mkdir -p /go /home/huntforge/.huntforge /home/huntforge/output /home/huntforge/config \
-    && chown -R huntforge:huntforge /go /home/huntforge
+RUN useradd -m -s /bin/bash -u 1000 swath \
+    && mkdir -p /go /home/swath/.swath /home/swath/output /home/swath/config \
+    && chown -R swath:swath /go /home/swath
 
-USER huntforge
-WORKDIR /home/huntforge
+USER swath
+WORKDIR /home/swath
 
 # Install Go-based tools (these go to $GOPATH/bin which is in PATH)
 # Note: continuing on error if a specific tool fails so the rest still install
@@ -69,20 +69,20 @@ RUN pip3 install --user --break-system-packages --upgrade pip setuptools wheel 2
 RUN echo "Installed tools:" \
     && ls -1 $(echo $GOPATH)/bin/ | head -20
 
-# Copy HuntForge project files
-COPY --chown=huntforge:huntforge . /home/huntforge/
+# Copy SWATH project files
+COPY --chown=swath:swath . /home/swath/
 
 # Install Python dependencies in virtual environment
-RUN python3 -m venv /home/huntforge/venv \
-    && /home/huntforge/venv/bin/pip install --upgrade pip \
-    && /home/huntforge/venv/bin/pip install -r requirements.txt
+RUN python3 -m venv /home/swath/venv \
+    && /home/swath/venv/bin/pip install --upgrade pip \
+    && /home/swath/venv/bin/pip install -r requirements.txt
 
 # Create convenience script
-RUN echo '#!/bin/bash\nsource /home/huntforge/venv/bin/activate\nexec "$@"' > /home/huntforge/entrypoint.sh \
-    && chmod +x /home/huntforge/entrypoint.sh
+RUN echo '#!/bin/bash\nsource /home/swath/venv/bin/activate\nexec "$@"' > /home/swath/entrypoint.sh \
+    && chmod +x /home/swath/entrypoint.sh
 
 # Prepare directories
-RUN mkdir -p /home/huntforge/logs /home/huntforge/output
+RUN mkdir -p /home/swath/logs /home/swath/output
 
-ENTRYPOINT ["/home/huntforge/entrypoint.sh"]
-CMD ["python3", "huntforge.py", "--help"]
+ENTRYPOINT ["/home/swath/entrypoint.sh"]
+CMD ["python3", "swath.py", "--help"]

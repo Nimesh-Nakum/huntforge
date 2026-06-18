@@ -1,5 +1,5 @@
 # ai/openrouter_helper.py
-# Author         : HuntForge Agent
+# Author         : SWATH Agent
 # Responsibility : Shared OpenRouter API client for all AI features.
 #                  Both methodology_engine.py and report_generator.py
 #                  use this helper instead of any local AI SDK.
@@ -73,8 +73,8 @@ class OpenRouterHelper:
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
-            "HTTP-Referer": "https://github.com/HuntForge/HuntForge", # Optional but recommended by OpenRouter
-            "X-Title": "HuntForge Recon Framework",
+            "HTTP-Referer": "https://github.com/SWATH/SWATH", # Optional but recommended by OpenRouter
+            "X-Title": "SWATH Recon Framework",
             "Content-Type": "application/json"
         }
 

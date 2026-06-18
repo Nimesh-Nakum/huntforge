@@ -1,5 +1,5 @@
 # ai/report_generator.py
-# Author         : HuntForge Agent
+# Author         : SWATH Agent
 # Responsibility : Generates the final bug bounty report using OpenRouter API.
 #                  Produces a Mandiant-grade, client-deliverable security assessment.
 # ------------------------------------------------------------
@@ -13,7 +13,7 @@ from ai.openrouter_helper import OpenRouterHelper
 
 
 SYSTEM_PROMPT = """\
-You are HuntForge AI — a senior offensive security analyst at a world-class threat intelligence firm.
+You are SWATH AI — a senior offensive security analyst at a world-class threat intelligence firm.
 
 Produce a **comprehensive, client-deliverable** reconnaissance and vulnerability assessment report in Markdown format.
 
@@ -183,10 +183,10 @@ class ReportGenerator:
 
             # Write the report with professional header
             with open(report_path, 'w', encoding='utf-8') as f:
-                f.write(f"# HuntForge Security Assessment — {domain}\n\n")
+                f.write(f"# SWATH Security Assessment — {domain}\n\n")
                 f.write(f"> **Classification:** CONFIDENTIAL — Client Deliverable\n")
                 f.write(f"> **Generated:** {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}\n")
-                f.write(f"> **Engine:** HuntForge AI ({self.helper.model})\n\n")
+                f.write(f"> **Engine:** SWATH AI ({self.helper.model})\n\n")
                 f.write("---\n\n")
                 f.write(report_text)
 

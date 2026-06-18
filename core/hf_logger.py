@@ -12,7 +12,7 @@ from core.siem_formatter import SIEMFormatter
 
 class HFLogger:
     """
-    Structured logger for HuntForge.
+    Structured logger for SWATH.
     Writes machine-readable events to JSONL and formats human-readable
     logs to the terminal via Loguru.
     """

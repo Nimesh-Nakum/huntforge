@@ -1,4 +1,4 @@
-# HuntForge Core Dependencies
+# SWATH Core Dependencies
 pyyaml==6.0.1
 rich==13.7.1
 loguru==0.7.2
@@ -6,7 +6,7 @@ requests==2.31.0
 python-dotenv==1.0.1
 psutil==5.9.8
 
-# HuntForge Dashboard
+# SWATH Dashboard
 Flask==3.0.3
 
 # Report Rendering

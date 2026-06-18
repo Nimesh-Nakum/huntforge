@@ -297,7 +297,7 @@ This methodology (`professional.yaml`) is designed for **actual bug bounty hunte
 # Edit methodology to remove phase_7, or use tags to skip
 
 # Just Phase 7 (if you already did recon manually)
-huntforge scan target.com --methodology config/methodologies/vulns_only.yaml
+swath scan target.com --methodology config/methodologies/vulns_only.yaml
 ```
 
 ### Customizing for a Specific Target
@@ -311,7 +311,7 @@ huntforge scan target.com --methodology config/methodologies/vulns_only.yaml
 # - Increase wpscan depth
 # - Add specific WordPress tools
 
-huntforge scan target.com --methodology custom.yaml
+swath scan target.com --methodology custom.yaml
 ```
 
 ### Running with Manual Review Points
@@ -373,7 +373,7 @@ If you hit the budget:
 
 ### Scope Enforcement
 
-Edit `~/.huntforge/scope.json`:
+Edit `~/.swath/scope.json`:
 
 ```json
 {
@@ -386,7 +386,7 @@ Edit `~/.huntforge/scope.json`:
 }
 ```
 
-HuntForge will:
+SWATH will:
 - ✅ Block any domain not matching `in_scope`
 - ✅ Skip explicit `out_of_scope` matches
 - ✅ Prompt for confirmation if domain not in any program
@@ -406,7 +406,7 @@ HuntForge will:
 
 3. Run with:
    ```bash
-   huntforge scan target.com --methodology my_methodology.yaml
+   swath scan target.com --methodology my_methodology.yaml
    ```
 
 **Common customizations:**
@@ -462,10 +462,10 @@ HuntForge will:
 
 ```bash
 # 1. Install tools (lite profile is enough for professional methodology)
-docker exec -u root huntforge-kali ./scripts/installer.py --profile lite
+docker exec -u root swath-kali ./scripts/installer.py --profile lite
 
 # 2. Run a professional scan
-huntforge scan target.com --methodology config/methodologies/professional.yaml
+swath scan target.com --methodology config/methodologies/professional.yaml
 
 # 3. After Phase 6 completes, review the tags
 cat output/target.com/processed/active_tags.json
@@ -473,7 +473,7 @@ cat output/target.com/processed/active_tags.json
 # 4. Decide if Phase 7 is warranted (answer y/n)
 
 # 5. Generate AI report
-huntforge report target.com
+swath report target.com
 ```
 
 ---
@@ -491,6 +491,6 @@ This methodology is synthesized from:
 ---
 
 **Last updated:** April 2026  
-**Maintained by:** HuntForge Professional Team
+**Maintained by:** SWATH Professional Team
 
 **Questions?** Open an issue or start a discussion.

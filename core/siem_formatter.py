@@ -1,6 +1,6 @@
 # core/siem_formatter.py
 # Author         : Member 3
-# Responsibility : Converts standard HuntForge event dicts into SIEM-compatible
+# Responsibility : Converts standard SWATH event dicts into SIEM-compatible
 #                  formats (Splunk JSON, CEF, LEEF) for enterprise integration.
 # ------------------------------------------------------------
 
@@ -27,7 +27,7 @@ class SIEMFormatter:
         Micro Focus ArcSight Common Event Format (CEF).
         CEF:Version|Device Vendor|Device Product|Device Version|Signature ID|Name|Severity|Extension
         """
-        vendor = "HuntForge"
+        vendor = "SWATH"
         product = "BugBountyFramework"
         version = "3.0"
         sig_id = event.get("event_type", "unknown")
@@ -51,7 +51,7 @@ class SIEMFormatter:
         IBM QRadar Log Event Extended Format (LEEF).
         LEEF:Version|Vendor|Product|Version|EventID|DelimiterCharacter|Extension
         """
-        vendor = "HuntForge"
+        vendor = "SWATH"
         product = "BugBountyFramework"
         version = "3.0"
         event_id = event.get("event_type", "unknown")

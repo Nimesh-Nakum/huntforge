@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HuntForge CLI Entry Point
+SWATH CLI Entry Point
 
 Responsibilities:
 - Parse CLI arguments
@@ -65,7 +65,7 @@ DEFAULT_METHOD = "config/default_methodology.yaml"
 def print_banner():
     console.print(
         Panel.fit(
-            "[bold cyan]HuntForge v1.0[/bold cyan]\n"
+            "[bold cyan]SWATH v1.0[/bold cyan]\n"
             "[dim]AI-Powered Bug Bounty Recon Framework[/dim]",
             border_style="cyan"
         )
@@ -147,7 +147,7 @@ def run_scan(domain, methodology_path, only_phase=None, override_input_file=None
         )
 
     # Start Scan
-    console.print("\n[cyan]Launching HuntForge Orchestrator[/cyan]\n")
+    console.print("\n[cyan]Launching SWATH Orchestrator[/cyan]\n")
 
     history = ScanHistory()
     output_dir = os.path.abspath(f"output/{domain}")
@@ -344,7 +344,7 @@ def resume_scan(domain):
 
 def build_parser():
     parser = argparse.ArgumentParser(
-        prog="huntforge",
+        prog="swath",
         description="AI Powered Bug Bounty Recon Framework"
     )
 
@@ -377,7 +377,7 @@ def build_parser():
     resume.add_argument("domain")
 
     # dashboard
-    dash = sub.add_parser("dashboard", help="Launch the HuntForge web dashboard")
+    dash = sub.add_parser("dashboard", help="Launch the SWATH web dashboard")
     dash.add_argument(
         "--port",
         default=5000,
@@ -427,7 +427,7 @@ def main():
 
     elif args.command == "dashboard":
         console.print(
-            f"[cyan]Starting HuntForge Dashboard on http://localhost:{args.port}[/cyan]"
+            f"[cyan]Starting SWATH Dashboard on http://localhost:{args.port}[/cyan]"
         )
         dashboard_env = {**os.environ, "FLASK_RUN_PORT": str(args.port)}
         proc = subprocess.Popen(

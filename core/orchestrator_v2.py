@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HuntForge Orchestrator V2 - Resource-Aware Adaptive Scheduling
+SWATH Orchestrator V2 - Resource-Aware Adaptive Scheduling
 
 Professional-grade orchestrator. Runs exactly what the methodology YAML defines.
 No profile filtering — the methodology IS the single source of truth.
@@ -36,7 +36,7 @@ from core.budget_tracker import BudgetTracker
 from core.scan_history import ScanHistory
 from core.hf_logger import HFLogger
 from core.exceptions import (
-    HuntForgeError, OutOfScopeError, BudgetExceededError,
+    SWATHError, OutOfScopeError, BudgetExceededError,
     BinaryNotFoundError, ToolTimeoutError, ToolExecutionError
 )
 
@@ -585,7 +585,7 @@ class OrchestratorV2:
 
     def run(self):
         """Main execution loop"""
-        logger.info(f"Starting HuntForge scan for {self.domain}")
+        logger.info(f"Starting SWATH scan for {self.domain}")
         self.scan_start_time = time.time()
         self._total_tools_count = self._count_total_tools()
 
@@ -890,7 +890,7 @@ def main():
     """CLI entry point for v2 orchestrator"""
     import argparse
 
-    parser = argparse.ArgumentParser(description="HuntForge Orchestrator V2 (Resource-Aware)")
+    parser = argparse.ArgumentParser(description="SWATH Orchestrator V2 (Resource-Aware)")
     parser.add_argument("domain", help="Target domain")
     parser.add_argument("--methodology", default="config/default_methodology.yaml",
                        help="Path to methodology YAML")
