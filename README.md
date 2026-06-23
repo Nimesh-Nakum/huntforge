@@ -224,6 +224,38 @@ User-Agent pool rotates across 4 real browser signatures (Chrome/Windows, Safari
 
 ---
 
+## Quick Start Guide
+
+You now have two primary ways to run SWATH: the **Interactive Console** (designed for manual, professional bug hunting) and the **Standard CLI** (designed for automation).
+
+### 1. The Interactive Console (Metasploit Style)
+This is your primary workspace. Drop into the interactive shell by running:
+```bash
+python swath.py interactive
+```
+
+Once inside the `swath >` prompt, you can use these commands:
+- **Set a Target**: `use example.com` (Sets the scope and active target)
+- **Configure Profiles**: `set profile ninja` (Applies rate limiting and WAF evasion)
+- **Run Scans**: `scan quick` (Runs early phases) or `scan full` (Runs all 7 phases)
+- **Review Results**: `show findings`, `show assets`, or `show tags`
+- **Export Data**: `export hackerone` or `export json`
+
+### 2. The Continuous Monitor
+If you want to track a target over time and get alerted when new subdomains appear or ports open:
+```bash
+python swath.py monitor example.com
+```
+*Tip: You can add this command to a cron job or scheduled task to run automatically every 24 hours.*
+
+### 3. Standard CLI Mode
+If you prefer traditional one-liner commands (great for CI/CD or background tasks):
+- **Standard Scan**: `python swath.py scan example.com`
+- **AI-Generated Methodology**: `python swath.py ai "Find PII leaks on subdomains"`
+- **Generate Report**: `python swath.py report example.com`
+
+---
+
 ## Installation
 
 ### Prerequisites
