@@ -338,8 +338,25 @@ def resume_scan(domain):
         history.record_end(scan_id, status, tag_count)
 
 
+def launch_console():
+    from core.console import SwathConsole
+    try:
+        SwathConsole().cmdloop()
+    except KeyboardInterrupt:
+        print("\nExiting...")
+        sys.exit(0)
+
+def run_monitor(domain):
+    from core.monitor import MonitorManager
+    from core.database import Database
+    console.print(f"[*] Running monitor check for {domain}...")
+    db = Database()
+    monitor = MonitorManager(db)
+    monitor.run_monitor_check()
+    console.print(f"[green]Monitor check completed for {domain}.[/green]")
+
 # --------------------------------------------------------
-# CLI Argument Parser
+# Argument Parsing
 # --------------------------------------------------------
 
 def build_parser():
@@ -348,10 +365,10 @@ def build_parser():
         description="AI Powered Bug Bounty Recon Framework"
     )
 
-    sub = parser.add_subparsers(dest="command")
+    subparsers = parser.add_subparsers(dest="command")
 
     # scan
-    scan = sub.add_parser("scan", help="Run a reconnaissance scan")
+    scan = subparsers.add_parser("scan", help="Run a reconnaissance scan")
     scan.add_argument("domain", help="Target domain")
     scan.add_argument(
         "--methodology",
@@ -360,30 +377,43 @@ def build_parser():
     )
 
     # precision
-    precision = sub.add_parser("precision", help="Run a precision vulnerability strike")
+    precision = subparsers.add_parser("precision", help="Run a precision vulnerability strike")
     precision.add_argument("domain")
     precision.add_argument("--file", required=True, help="Target list file override")
 
     # ai
-    ai = sub.add_parser("ai", help="Generate scan methodology using AI")
+    ai = subparsers.add_parser("ai", help="Generate scan methodology using AI")
     ai.add_argument("prompt", help="Instruction prompt for AI")
 
     # report
-    report = sub.add_parser("report", help="Generate executive AI report")
+    report = subparsers.add_parser("report", help="Generate executive AI report")
     report.add_argument("domain")
 
     # resume
-    resume = sub.add_parser("resume", help="Resume a previous scan")
+    resume = subparsers.add_parser("resume", help="Resume a previous scan")
     resume.add_argument("domain")
 
     # dashboard
-    dash = sub.add_parser("dashboard", help="Launch the SWATH web dashboard")
+    dash = subparsers.add_parser("dashboard", help="Launch the SWATH web dashboard")
     dash.add_argument(
         "--port",
         default=5000,
         type=int,
         help="Port to run the dashboard on (default: 5000)"
     )
+    
+    # 5) "interactive" - Launch REPL console
+    parser_interactive = subparsers.add_parser(
+        "interactive",
+        help="Launch the interactive Metasploit-style console"
+    )
+
+    # 6) "monitor" - Run continuous monitoring
+    parser_monitor = subparsers.add_parser(
+        "monitor",
+        help="Run continuous monitoring checks"
+    )
+    parser_monitor.add_argument("domain", nargs="?", default="all", help="Target domain or 'all'")
 
     return parser
 
@@ -393,13 +423,21 @@ def build_parser():
 # --------------------------------------------------------
 
 def main():
-    print_banner()
-
     parser = build_parser()
     args = parser.parse_args()
 
+    print_banner()
+
     if not args.command:
         parser.print_help()
+        return
+
+    if args.command == "interactive":
+        launch_console()
+        return
+
+    if args.command == "monitor":
+        run_monitor(args.domain)
         return
 
     if args.command == "scan":

@@ -87,42 +87,15 @@ from modules.vuln_scan.sqlmap import SQLMapModule as SQLMap
 # ═══════════════════════════════════════════════════════════════════
 # TOOL REGISTRY — maps YAML tool names to Python classes
 # ═══════════════════════════════════════════════════════════════════
-
-TOOL_REGISTRY = {
-    # Phase 1 — Passive Recon
-    'subfinder':        Subfinder,
-    'crtsh':            Crtsh,
-
-    # Phase 2 — Secrets & OSINT
-    'gitleaks':         Gitleaks,
-    'trufflehog':       Trufflehog,
-
-    # Phase 3 — Live Asset Discovery
-    'httpx':            Httpx,
-    'naabu':            Naabu,
-
-    # Phase 4 — Surface Intelligence
-    'whatweb':          WhatWeb,
-    'wappalyzer_cli':   Wappalyzer,
-
-    # Phase 5 — Enumeration
-    'katana':           Katana,
-    'gau':              Gau,
-    'paramspider':      Paramspider,
-    'arjun':            Arjun,
-    'graphql_voyager':  GraphqlVoyager,
-
-    # Phase 6 — Content Discovery
-    'ffuf':             Ffuf,
-    'wpscan':           Wpscan,
-
-    # Phase 7 — Vulnerability Scanning
-    'nuclei':           Nuclei,
-    'nuclei_auth':      Nuclei,
-    'subjack':          Subjack,
-    'dalfox':           Dalfox,
-    'sqlmap':           SQLMap,
-}
+from core.plugin_loader import PluginLoader
+TOOL_REGISTRY = PluginLoader.discover()
+# Explicitly map nuclei_auth to Nuclei as it uses the same module
+if 'nuclei' in TOOL_REGISTRY:
+    TOOL_REGISTRY['nuclei_auth'] = TOOL_REGISTRY['nuclei']
+# Add original ones if missing just in case
+if 'subfinder' not in TOOL_REGISTRY: TOOL_REGISTRY['subfinder'] = Subfinder
+if 'httpx' not in TOOL_REGISTRY: TOOL_REGISTRY['httpx'] = Httpx
+if 'nuclei' not in TOOL_REGISTRY: TOOL_REGISTRY['nuclei'] = Nuclei
 
 
 class OrchestratorV2:

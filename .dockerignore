@@ -3,6 +3,7 @@ lib/
 lib64/
 swath/lib/
 swath/lib64/
+huntforge/
 venv/
 ENV/
 env/

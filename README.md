@@ -11,7 +11,7 @@
 ```
 
 **Surgical reconnaissance for professional bug bounty hunters.**  
-19 curated tools (16 binary + 3 API/Python modules). Autonomous WAF evasion. Tag-driven conditional execution.  
+31 curated tools (including JS Analysis, API Testing, Cloud Discovery). Autonomous WAF evasion. Tag-driven conditional execution.  
 Zero noise. Maximum signal.
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/downloads/)
@@ -29,7 +29,7 @@ Zero noise. Maximum signal.
 
 ## What is SWATH?
 
-SWATH is a strict, containerized reconnaissance orchestrator designed for operators who value **signal over noise**. Built on the principle that most recon frameworks are bloated museum exhibits of deprecated tools, SWATH runs exactly 19 curated tools through a 7-phase pipeline governed by intelligence tags — not blind sequential execution.
+SWATH is a strict, containerized reconnaissance orchestrator designed for operators who value **signal over noise**. Built on the principle that most recon frameworks are bloated museum exhibits of deprecated tools, SWATH runs exactly 31 curated tools through a 7-phase pipeline governed by intelligence tags — not blind sequential execution. Now armed with a Metasploit-style interactive console and continuous monitoring diff engine, it is the ultimate professional web penetration framework.
 
 Phase 3 detects a Cloudflare WAF at high confidence? Every downstream tool auto-injects rate limiting and browser User-Agents. Phase 4 fingerprints WordPress? Phase 6 conditionally unlocks `wpscan`. Phase 1 finds zero subdomains? The pipeline aborts — there's nothing to hunt.
 
@@ -46,17 +46,20 @@ Phase 3 detects a Cloudflare WAF at high confidence? Every downstream tool auto-
 
 ## Key Features
 
+- **Metasploit-Style Interactive Console** — Run `swath interactive` to drop into a REPL environment. Use `use example.com`, `set profile ninja`, `scan quick`, `show findings`, and `export json` just like Metasploit.
+- **Continuous Monitoring & Diffing** — Run `swath monitor target.com` to schedule recurring scans. The new `DiffEngine` compares historical SQLite database records and alerts on new subdomains, changed technologies, and open ports.
+- **Auto-Discovery Plugin System** — Just drop a `.py` file inheriting `BaseModule` into the `modules/` folder, and the orchestrator dynamically loads it. No hardcoded registries.
+- **Persistent SQLite Database** — All targets, assets, findings, and changes are stored persistently in `~/.swath/history.db` for cross-scan intelligence.
+- **Multi-Channel Notification Hub** — Async alerts pushed to Discord, Slack, or Telegram the second a critical vulnerability or new asset is found.
+- **Bounty & Export Engine** — Track your HackerOne/Bugcrowd bounty stats via `BountyManager`. Export findings seamlessly to Markdown, CSV, JSON, or HackerOne template formats.
 - **AI Methodology Engine** — Describe your goal in plain English. OpenRouter (`gemini-2.5-flash`) generates a surgical YAML methodology with correct phase keys, tool names, and conditional gates.
 - **AI Executive Reports** — Post-scan, tags + raw output are synthesized into a professional Markdown penetration report with severity classifications.
-- **Autonomous WAF Evasion** — Detects Cloudflare, Akamai, Imperva, Incapsula, Sucuri, AWS WAF, ModSecurity, F5 ASM, FortiWeb, Barracuda, and Wordfence. Auto-injects rate limiting + UA rotation on 8 downstream tools.
+- **Autonomous WAF Evasion** — Detects WAFs and auto-injects rate limiting + UA rotation based on Stealth Profiles (`ghost`, `ninja`, `blitz`).
 - **Tag-Driven Conditional Execution** — Tools run only when prerequisite intelligence tags exist. `has_wordpress` → `wpscan`. `has_api` → `arjun`. `params_found` → `dalfox`.
 - **Human Decision Point** — Phase 7 (vulnerability scanning) requires explicit `y/N` confirmation. You review the recon summary before any noisy vuln scans fire.
-- **SmartTimeoutV2** — Hybrid activity monitoring via output file growth + CPU/IO deltas via `psutil`. Tool-specific profiles (nuclei: 600s extension, dalfox: 120s, katana: 450s low-IO threshold).
 - **Resource-Aware Scheduling** — `AdaptiveScheduler` scales tool parameters to fit available RAM. `ResourceMonitor` checks CPU pressure, swap usage, and user activity before scheduling heavy tools.
 - **State Checkpointing** — Saves `completed_tools`, `tags`, and `phase` after every tool. `swath resume target.com` picks up exactly where it stopped.
 - **Scope Enforcement** — Wildcard-based scope matching in `~/.swath/scope.json`. Blocks out-of-scope targets with manual override confirmation.
-- **Budget Tracking** — Tracks HTTP request count and elapsed time per scan. Gates tool execution when budget is exceeded. Saves to `processed/budget_status.json`.
-- **SIEM Integration** — Structured JSONL event logging. `SIEMFormatter` outputs to Splunk (JSON), ArcSight (CEF), and QRadar (LEEF).
 - **Docker Isolation** — All tools execute inside a hardened Kali container. 4GB memory limit, non-root user, volume-mounted output.
 
 ---
