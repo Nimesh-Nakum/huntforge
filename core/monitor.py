@@ -54,35 +54,39 @@ class MonitorManager:
     def list_monitors(self) -> dict:
         return self.monitors
 
-    def run_monitor_check(self):
+    def run_monitor_check(self, specific_domain: str = None):
         """Called by cron or scheduler to execute due monitors."""
         now = time.time()
         for domain, config in self.monitors.items():
+            if specific_domain and specific_domain != "all" and specific_domain != domain:
+                continue
+                
             interval_sec = config['interval_hours'] * 3600
-            if now - config['last_run'] >= interval_sec:
+            if now - config['last_run'] >= interval_sec or specific_domain == domain:
                 logger.info(f"Executing scheduled monitor scan for {domain}")
-                # Mock: Here we would instantiate the Orchestrator and run the scan
-                # orchestrator = OrchestratorV2(domain, phases=config['phases'])
-                # scan_id = orchestrator.run()
                 
-                # Mocking scan execution
-                scan_id = 999 
-                
-                # Update last run
-                self.monitors[domain]['last_run'] = now
-                self._save_monitors()
-                
-                # Generate diff
-                target_id = self.db.upsert_target(domain)
-                diff_engine = DiffEngine(self.db)
-                report = diff_engine.generate_diff_report(target_id, scan_id)
-                
-                if report != "No changes detected since last scan.":
-                    self.notifier.notify(
-                        'monitor_alert',
-                        f"Attack Surface Change: {domain}",
-                        report
-                    )
+                from core.orchestrator_v2 import OrchestratorV2
+                try:
+                    orch = OrchestratorV2(domain)
+                    scan_id = orch.run()
+                    
+                    # Update last run
+                    self.monitors[domain]['last_run'] = now
+                    self._save_monitors()
+                    
+                    # Generate diff
+                    target_id = self.db.upsert_target(domain)
+                    diff_engine = DiffEngine(self.db)
+                    report = diff_engine.generate_diff_report(target_id, scan_id)
+                    
+                    if report != "No changes detected since last scan.":
+                        self.notifier.notify(
+                            'monitor_alert',
+                            f"Attack Surface Change: {domain}",
+                            report
+                        )
+                except Exception as e:
+                    logger.error(f"Monitor scan failed for {domain}: {e}")
 
     def generate_cron_entry(self) -> str:
         """Returns the crontab line required to run the monitor automatically."""

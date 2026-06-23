@@ -55,7 +55,7 @@ class CorsyModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("cors_misconfig", confidence=100)
+            tag_manager.add("cors_misconfig", confidence='high', source='corsy')
 
     def estimated_requests(self) -> int:
         return 1000

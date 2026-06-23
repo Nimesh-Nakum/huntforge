@@ -18,13 +18,16 @@ class StealthManager:
             self.create_default_config()
         try:
             with open(self.config_path, 'r') as f:
-                return yaml.safe_load(f).get('profiles', {})
+                data = yaml.safe_load(f)
+                return data.get('profiles', {}) if data else {}
         except Exception as e:
             logger.error(f"Failed to load stealth profiles: {e}")
             return {}
 
     def create_default_config(self):
-        os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
+        parent_dir = os.path.dirname(self.config_path)
+        if parent_dir:
+            os.makedirs(parent_dir, exist_ok=True)
         default_config = {
             'profiles': {
                 'ghost': {

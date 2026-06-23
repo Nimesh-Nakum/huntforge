@@ -54,8 +54,8 @@ class SecretFinderModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("js_secrets_found", confidence=100)
-            tag_manager.add_tag("api_keys_in_js", confidence=90)
+            tag_manager.add("js_secrets_found", confidence='high', source='secretfinder')
+            tag_manager.add("api_keys_in_js", confidence='medium', source='secretfinder')
 
     def estimated_requests(self) -> int:
         return 10

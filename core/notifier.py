@@ -59,13 +59,17 @@ class Notifier:
         thread.start()
 
     def _dispatch(self, channel: str, cfg: dict, title: str, message: str, data: dict):
-        if channel == 'discord' and cfg.get('webhook'):
-            payload = {"content": f"**{title}**\n{message}"}
-            requests.post(cfg['webhook'], json=payload, timeout=5)
+        webhook = cfg.get('webhook', '').strip()
+        if not webhook:
+            return
             
-        elif channel == 'slack' and cfg.get('webhook'):
+        if channel == 'discord':
+            payload = {"content": f"**{title}**\n{message}"}
+            requests.post(webhook, json=payload, timeout=5)
+            
+        elif channel == 'slack':
             payload = {"text": f"*{title}*\n{message}"}
-            requests.post(cfg['webhook'], json=payload, timeout=5)
+            requests.post(webhook, json=payload, timeout=5)
             
         # Extensible for telegram, email, etc.
 

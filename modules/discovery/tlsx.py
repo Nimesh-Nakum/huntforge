@@ -55,7 +55,7 @@ class TlsxModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("ssl_cert_analyzed", confidence=100)
+            tag_manager.add("ssl_cert_analyzed", confidence='high', source='tlsx')
 
     def estimated_requests(self) -> int:
         return 1000

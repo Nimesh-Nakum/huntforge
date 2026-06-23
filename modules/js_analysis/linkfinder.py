@@ -64,8 +64,8 @@ class LinkFinderModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("js_endpoints_found", confidence=100)
-            tag_manager.add_tag("api_routes_in_js", confidence=90)
+            tag_manager.add("js_endpoints_found", confidence='high', source='linkfinder')
+            tag_manager.add("api_routes_in_js", confidence='medium', source='linkfinder')
 
     def estimated_requests(self) -> int:
         return 10

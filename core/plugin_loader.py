@@ -9,10 +9,16 @@ class PluginLoader:
     """
     Auto-discovers and loads all BaseModule subclasses from the modules/ directory.
     """
-    
     _REGISTRY = {}
     _is_loaded = False
     
+    @classmethod
+    def reload(cls, modules_pkg="modules"):
+        """Forces a reload of all plugins."""
+        cls._is_loaded = False
+        cls._REGISTRY.clear()
+        return cls.discover(modules_pkg)
+        
     @classmethod
     def discover(cls, modules_pkg="modules"):
         if cls._is_loaded:

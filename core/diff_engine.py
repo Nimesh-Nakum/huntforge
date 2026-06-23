@@ -19,10 +19,8 @@ class DiffEngine:
             return {}
             
         # Get historical assets
-        conn = self.db._get_conn()
-        cur = conn.execute('SELECT id, type, value, is_alive FROM assets WHERE target_id = ?', (target_id,))
-        hist_assets = {(row['type'], row['value']): dict(row) for row in cur.fetchall()}
-        conn.close()
+        assets_list = self.db.get_assets(target_id)
+        hist_assets = {(row['type'], row['value']): dict(row) for row in assets_list}
         
         diff = {'new': [], 'resurrected': [], 'removed': []}
         seen_current = set()

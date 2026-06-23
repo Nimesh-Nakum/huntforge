@@ -30,7 +30,7 @@ class OpenRedirectModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("open_redirect_found", confidence=100)
+            tag_manager.add("open_redirect_found", confidence='high', source='openredirect')
 
     def estimated_requests(self) -> int:
         return 500

@@ -23,8 +23,6 @@ class Database:
         conn = self._get_conn()
         cur = conn.cursor()
         
-        # We assume scans table already exists from original codebase, but we'll add targets, assets, findings
-        
         cur.executescript('''
         CREATE TABLE IF NOT EXISTS targets (
             id INTEGER PRIMARY KEY,
@@ -90,6 +88,7 @@ class Database:
         conn.close()
 
     def upsert_target(self, domain, program=None, platform=None):
+        """Insert or update a target. Always returns the target ID, or None on error."""
         conn = self._get_conn()
         try:
             conn.execute('''
@@ -103,13 +102,19 @@ class Database:
             conn.commit()
             
             cur = conn.execute('SELECT id FROM targets WHERE domain = ?', (domain,))
-            return cur.fetchone()['id']
+            row = cur.fetchone()
+            return row['id'] if row else None
         except sqlite3.Error as e:
             logger.error(f"DB Error upserting target {domain}: {e}")
+            return None
         finally:
             conn.close()
             
     def upsert_asset(self, target_id, asset_type, value, source, metadata=None):
+        """Insert or update an asset. Always returns asset ID, or None on error."""
+        if target_id is None:
+            logger.warning(f"Cannot upsert asset '{value}': target_id is None")
+            return None
         conn = self._get_conn()
         try:
             meta_str = json.dumps(metadata) if metadata else None
@@ -125,13 +130,19 @@ class Database:
             
             cur = conn.execute('SELECT id FROM assets WHERE target_id = ? AND type = ? AND value = ?', 
                                (target_id, asset_type, value))
-            return cur.fetchone()['id']
+            row = cur.fetchone()
+            return row['id'] if row else None
         except sqlite3.Error as e:
             logger.error(f"DB Error upserting asset {value}: {e}")
+            return None
         finally:
             conn.close()
 
     def add_finding(self, target_id, asset_id, scan_id, severity, finding_type, title, description=None, evidence=None, tool="unknown", template_id=None):
+        """Insert or update a finding. Always returns finding ID, or None on error."""
+        if target_id is None:
+            logger.warning(f"Cannot add finding '{title}': target_id is None")
+            return None
         conn = self._get_conn()
         try:
             conn.execute('''
@@ -146,8 +157,73 @@ class Database:
             
             cur = conn.execute('SELECT id FROM findings WHERE target_id = ? AND type = ? AND title = ? AND tool = ?', 
                                (target_id, finding_type, title, tool))
-            return cur.fetchone()['id']
+            row = cur.fetchone()
+            return row['id'] if row else None
         except sqlite3.Error as e:
             logger.error(f"DB Error adding finding {title}: {e}")
+            return None
+        finally:
+            conn.close()
+
+    def get_findings(self, target_id=None, severity=None, is_reported=None):
+        """Retrieve findings with optional filters. Returns list of dicts."""
+        conn = self._get_conn()
+        try:
+            query = 'SELECT * FROM findings WHERE 1=1'
+            params = []
+            if target_id is not None:
+                query += ' AND target_id = ?'
+                params.append(target_id)
+            if severity is not None:
+                query += ' AND severity = ?'
+                params.append(severity)
+            if is_reported is not None:
+                query += ' AND is_reported = ?'
+                params.append(1 if is_reported else 0)
+            cur = conn.execute(query, params)
+            return [dict(row) for row in cur.fetchall()]
+        except sqlite3.Error as e:
+            logger.error(f"DB Error getting findings: {e}")
+            return []
+        finally:
+            conn.close()
+
+    def get_assets(self, target_id, asset_type=None, is_alive=None):
+        """Retrieve assets with optional filters. Returns list of dicts."""
+        conn = self._get_conn()
+        try:
+            query = 'SELECT * FROM assets WHERE target_id = ?'
+            params = [target_id]
+            if asset_type is not None:
+                query += ' AND type = ?'
+                params.append(asset_type)
+            if is_alive is not None:
+                query += ' AND is_alive = ?'
+                params.append(1 if is_alive else 0)
+            cur = conn.execute(query, params)
+            return [dict(row) for row in cur.fetchall()]
+        except sqlite3.Error as e:
+            logger.error(f"DB Error getting assets: {e}")
+            return []
+        finally:
+            conn.close()
+
+    def get_stats(self):
+        """Return summary statistics."""
+        conn = self._get_conn()
+        try:
+            stats = {}
+            cur = conn.execute('SELECT COUNT(*) as c FROM targets')
+            stats['targets'] = cur.fetchone()['c']
+            cur = conn.execute('SELECT COUNT(*) as c FROM assets')
+            stats['assets'] = cur.fetchone()['c']
+            cur = conn.execute('SELECT COUNT(*) as c FROM findings')
+            stats['findings'] = cur.fetchone()['c']
+            cur = conn.execute('SELECT severity, COUNT(*) as c FROM findings GROUP BY severity')
+            stats['by_severity'] = {row['severity']: row['c'] for row in cur.fetchall()}
+            return stats
+        except sqlite3.Error as e:
+            logger.error(f"DB Error getting stats: {e}")
+            return {}
         finally:
             conn.close()

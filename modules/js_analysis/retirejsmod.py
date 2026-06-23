@@ -59,8 +59,8 @@ class RetireJsModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("vulnerable_js_libs", confidence=100)
-            tag_manager.add_tag("outdated_js", confidence=90)
+            tag_manager.add("vulnerable_js_libs", confidence='high', source='retirejs')
+            tag_manager.add("outdated_js", confidence='medium', source='retirejs')
 
     def estimated_requests(self) -> int:
         return 5

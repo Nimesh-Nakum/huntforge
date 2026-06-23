@@ -47,7 +47,7 @@ class S3ScannerModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("s3_buckets_found", confidence=100)
+            tag_manager.add("s3_buckets_found", confidence='high', source='s3scanner')
 
     def estimated_requests(self) -> int:
         return 50

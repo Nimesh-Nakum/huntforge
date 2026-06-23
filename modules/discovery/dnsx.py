@@ -55,8 +55,8 @@ class DnsxModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("cname_records_found", confidence=100)
-            tag_manager.add_tag("dns_resolved", confidence=100)
+            tag_manager.add("cname_records_found", confidence='high', source='dnsx')
+            tag_manager.add("dns_resolved", confidence='high', source='dnsx')
 
     def estimated_requests(self) -> int:
         return 1000

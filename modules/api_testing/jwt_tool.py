@@ -56,8 +56,8 @@ class JwtToolModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("jwt_vuln_found", confidence=100)
-            tag_manager.add_tag("jwt_weak_secret", confidence=90)
+            tag_manager.add("jwt_vuln_found", confidence='high', source='jwt_tool')
+            tag_manager.add("jwt_weak_secret", confidence='medium', source='jwt_tool')
 
     def estimated_requests(self) -> int:
         return 100

@@ -5,6 +5,7 @@ from loguru import logger
 class CredentialManager:
     """
     Credential and session manager for SWATH tools.
+    Note: Currently stores credentials in plaintext YAML.
     """
     
     def __init__(self, config_path="~/.swath/credentials.yaml"):

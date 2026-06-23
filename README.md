@@ -237,8 +237,9 @@ python swath.py interactive
 Once inside the `swath >` prompt, you can use these commands:
 - **Set a Target**: `use example.com` (Sets the scope and active target)
 - **Configure Profiles**: `set profile ninja` (Applies rate limiting and WAF evasion)
-- **Run Scans**: `scan quick` (Runs early phases) or `scan full` (Runs all 7 phases)
-- **Review Results**: `show findings`, `show assets`, or `show tags`
+- **Run Scans**: `scan quick` or `scan full`
+- **Review Results**: `findings`, `assets`, or `modules`
+- **List Targets**: `targets`
 - **Export Data**: `export hackerone` or `export json`
 
 ### 2. The Continuous Monitor

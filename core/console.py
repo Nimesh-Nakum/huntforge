@@ -61,14 +61,31 @@ class SwathConsole(cmd.Cmd):
         self.rich_console.print(table)
 
     def do_scan(self, arg):
-        """Launch scan with current settings"""
+        """Launch scan with current settings: scan <quick|full>"""
         if not self.target:
             self.rich_console.print("[red]Please set a target first using 'use <domain>'[/red]")
             return
             
-        self.rich_console.print(f"[*] Launching SWATH scan for {self.target}...")
-        # In a real integration, we'd invoke orchestrator.py here
-        self.rich_console.print("[yellow]Scan running in background (mocked).[/yellow]")
+        methodology = "config/workflows/quick_wins.yaml"
+        if arg == "full":
+            methodology = "config/workflows/full_assault.yaml"
+            
+        self.rich_console.print(f"[*] Launching SWATH scan for {self.target} using {methodology}...")
+        from core.orchestrator_v2 import OrchestratorV2
+        import threading
+        
+        def run_scan_thread():
+            try:
+                orch = OrchestratorV2(self.target, methodology_path=methodology)
+                orch.run()
+                self.rich_console.print(f"\n[green][✔] Scan completed for {self.target}[/green]")
+            except Exception as e:
+                self.rich_console.print(f"\n[red][✖] Scan failed: {e}[/red]")
+            self.update_prompt()
+            
+        t = threading.Thread(target=run_scan_thread, daemon=True)
+        t.start()
+        self.rich_console.print("[yellow]Scan running in background. You can continue using the console.[/yellow]")
 
     def do_findings(self, arg):
         """List all findings for current target"""
@@ -113,9 +130,59 @@ class SwathConsole(cmd.Cmd):
         self.rich_console.print("Exiting...")
         return True
         
+    do_quit = do_exit
+    do_EOF = do_exit
+        
     def do_clear(self, arg):
         """Clear screen"""
         os.system('cls' if os.name == 'nt' else 'clear')
+
+    def do_modules(self, arg):
+        """List all loaded modules"""
+        from core.plugin_loader import PluginLoader
+        modules = PluginLoader.list_by_phase()
+        for phase, mods in modules.items():
+            self.rich_console.print(f"[bold cyan]Phase: {phase}[/bold cyan]")
+            for m in mods:
+                self.rich_console.print(f"  - {m}")
+                
+    def do_assets(self, arg):
+        """List all assets for current target"""
+        if not self.target:
+            self.rich_console.print("[red]Please set a target first.[/red]")
+            return
+        conn = self.db._get_conn()
+        cur = conn.execute('SELECT a.type, a.value, a.source FROM assets a JOIN targets t ON a.target_id = t.id WHERE t.domain = ?', (self.target,))
+        rows = cur.fetchall()
+        conn.close()
+        table = Table(title=f"Assets for {self.target}")
+        table.add_column("Type")
+        table.add_column("Value")
+        table.add_column("Source")
+        for r in rows:
+            table.add_row(r['type'], r['value'], r['source'])
+        self.rich_console.print(table)
+        
+    def do_export(self, arg):
+        """Export findings: export <json|csv|markdown|hackerone>"""
+        if not self.target:
+            self.rich_console.print("[red]Please set a target first.[/red]")
+            return
+        if not arg:
+            self.rich_console.print("[red]Usage: export <format>[/red]")
+            return
+            
+        from core.exporter import Exporter
+        exporter = Exporter()
+        
+        conn = self.db._get_conn()
+        cur = conn.execute('SELECT f.*, a.value as asset_value FROM findings f JOIN targets t ON f.target_id = t.id LEFT JOIN assets a ON f.asset_id = a.id WHERE t.domain = ?', (self.target,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        
+        out_file = f"export_{self.target}.{arg}"
+        exporter.export(rows, arg, out_file)
+        self.rich_console.print(f"[green]Exported {len(rows)} findings to {out_file}[/green]")
 
 if __name__ == '__main__':
     try:

@@ -63,8 +63,8 @@ class KiterunnerModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("api_endpoints_found", confidence=100)
-            tag_manager.add_tag("hidden_api_routes", confidence=90)
+            tag_manager.add("api_endpoints_found", confidence='high', source='kiterunner')
+            tag_manager.add("hidden_api_routes", confidence='medium', source='kiterunner')
 
     def estimated_requests(self) -> int:
         return 5000

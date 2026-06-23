@@ -352,7 +352,7 @@ def run_monitor(domain):
     console.print(f"[*] Running monitor check for {domain}...")
     db = Database()
     monitor = MonitorManager(db)
-    monitor.run_monitor_check()
+    monitor.run_monitor_check(domain)
     console.print(f"[green]Monitor check completed for {domain}.[/green]")
 
 # --------------------------------------------------------

@@ -40,11 +40,13 @@ class Exporter:
         if not findings:
             return
             
-        keys = findings[0].keys()
+        # Ensure findings are dicts
+        dict_findings = [dict(f) for f in findings]
+        keys = dict_findings[0].keys()
         with open(output_path, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=keys)
             writer.writeheader()
-            writer.writerows(findings)
+            writer.writerows(dict_findings)
         logger.info(f"Exported CSV to {output_path}")
 
     def export_json(self, findings: list, output_path: str):

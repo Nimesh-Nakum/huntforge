@@ -52,7 +52,7 @@ class CloudEnumModule(BaseModule):
 
     def emit_tags(self, run_results: dict, tag_manager) -> None:
         if run_results.get('count', 0) > 0:
-            tag_manager.add_tag("cloud_assets_found", confidence=100)
+            tag_manager.add("cloud_assets_found", confidence='high', source='cloudenum')
 
     def estimated_requests(self) -> int:
         return 500
