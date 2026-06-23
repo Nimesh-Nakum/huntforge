@@ -172,19 +172,31 @@ graph TD
 | 4 | trufflehog | `trufflehog` | 2 | secrets | **None** | 0% — Operates locally on downloaded data | Light |
 | 5 | httpx | `httpx` | 3 | discovery | **Low** | 20% — WAF/CDN logs show mass HTTP GET requests | Medium |
 | 6 | naabu | `naabu` | 3 | discovery | **High** | 80% — Core firewalls alert on SYN sweeps | Heavy |
-| 7 | whatweb | `whatweb` | 4 | surface_intel | **Low** | 15% — Quick HEAD/GET probes per host | Light |
-| 8 | wappalyzer | `wappalyzer` (npm) | 4 | surface_intel | **Low** | 15% — Technology fingerprinting via headers | Medium |
-| 9 | katana | `katana` | 5 | enumeration | **Medium** | 40% — Looks like an aggressive bot/scraper | Medium |
-| 10 | gau | `gau` | 5 | enumeration | **Low** | 0% — Queries Wayback/CommonCrawl, not target | Medium |
-| 11 | paramspider | `python3 paramspider.py` | 5 | enumeration | **Low** | 10% — Fetches known URLs from external sources | Light |
-| 12 | arjun | `arjun` | 5 | enumeration | **Medium** | 30% — Sends parameter probes to target | Light |
-| 13 | graphql_voyager | — (HTTP) | 5 | enumeration | **Low** | 5% — Introspection queries against GraphQL endpoints | Light |
-| 14 | ffuf | `ffuf` | 6 | content_discovery | **High** | 95% — Triggers WAF rules for directory brute forcing | Heavy |
-| 15 | wpscan | `wpscan` | 6 | content_discovery | **Medium** | 50% — WordPress enumeration is detectable | Medium |
-| 16 | nuclei | `nuclei` | 7 | vuln_scan | **High** | 99% — SIEM alerts on standard Nuclei payloads/headers | Heavy |
-| 17 | subjack | `subjack` | 7 | vuln_scan | **Low** | 5% — Simple DNS resolution + selective HTTP GET | Medium |
-| 18 | dalfox | `dalfox` | 7 | vuln_scan | **High** | 100% — Highly noisy, triggers basic XSS WAF rules | Heavy |
-| 19 | sqlmap | `sqlmap` | 7 | vuln_scan | **High** | 95% — SQL injection payloads are signature-matched | Heavy |
+| 7 | dnsx | `dnsx` | 3 | discovery | **Low** | 10% — Active DNS resolution mapping | Light |
+| 8 | tlsx | `tlsx` | 3 | discovery | **Low** | 15% — Certificate and cipher enumeration | Light |
+| 9 | whatweb | `whatweb` | 4 | surface_intel | **Low** | 15% — Quick HEAD/GET probes per host | Light |
+| 10 | wappalyzer | `wappalyzer` (npm) | 4 | surface_intel | **Low** | 15% — Technology fingerprinting via headers | Medium |
+| 11 | katana | `katana` | 5 | enumeration | **Medium** | 40% — Looks like an aggressive bot/scraper | Medium |
+| 12 | gau | `gau` | 5 | enumeration | **Low** | 0% — Queries Wayback/CommonCrawl, not target | Medium |
+| 13 | paramspider | `python3 paramspider.py` | 5 | enumeration | **Low** | 10% — Fetches known URLs from external sources | Light |
+| 14 | arjun | `arjun` | 5 | enumeration | **Medium** | 30% — Sends parameter probes to target | Light |
+| 15 | graphql_voyager | — (HTTP) | 5 | enumeration | **Low** | 5% — Introspection queries against GraphQL endpoints | Light |
+| 16 | ffuf | `ffuf` | 6 | content_discovery | **High** | 95% — Triggers WAF rules for directory brute forcing | Heavy |
+| 17 | wpscan | `wpscan` | 6 | content_discovery | **Medium** | 50% — WordPress enumeration is detectable | Medium |
+| 18 | linkfinder | `linkfinder.py` | 8 | js_analysis | **Low** | 5% — Scrapes JS files for endpoints | Light |
+| 19 | secretfinder | `secretfinder.py` | 8 | js_analysis | **Low** | 5% — Extracts keys/tokens from JS files | Light |
+| 20 | retirejs | `retire` (npm) | 8 | js_analysis | **Low** | 0% — Local analysis of downloaded libraries | Light |
+| 21 | kiterunner | `kr` | 9 | api_testing | **High** | 90% — Aggressive API route brute forcing | Heavy |
+| 22 | jwt_tool | `jwt_tool.py` | 9 | api_testing | **Medium** | 40% — Forges and manipulates auth tokens | Medium |
+| 23 | cloudenum | `cloud_enum` | 10 | cloud | **Low** | 10% — Queries AWS/GCP/Azure public APIs | Light |
+| 24 | s3scanner | `s3scanner` | 10 | cloud | **Low** | 20% — Tests public accessibility of buckets | Light |
+| 25 | nuclei | `nuclei` | 7 | vuln_scan | **High** | 99% — SIEM alerts on standard Nuclei payloads/headers | Heavy |
+| 26 | subjack | `subjack` | 7 | vuln_scan | **Low** | 5% — Simple DNS resolution + selective HTTP GET | Medium |
+| 27 | dalfox | `dalfox` | 7 | vuln_scan | **High** | 100% — Highly noisy, triggers basic XSS WAF rules | Heavy |
+| 28 | sqlmap | `sqlmap` | 7 | vuln_scan | **High** | 95% — SQL injection payloads are signature-matched | Heavy |
+| 29 | corsy | `corsy.py` | 7 | vuln_scan | **Medium** | 50% — Origin reflection testing | Medium |
+| 30 | crlfuzz | `crlfuzz` | 7 | vuln_scan | **Medium** | 60% — Header injection probes | Medium |
+| 31 | openredirect | `oralyzer.py` | 7 | vuln_scan | **High** | 80% — Fuzzes parameters for URL redirects | Heavy |
 
 > **Operational Note:** Tools at detection risk "High" should only be run against targets where you have explicit authorization. Phase 7 requires manual confirmation for this reason.
 
